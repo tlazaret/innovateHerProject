@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Stack } from 'expo-router';
 import { Button, RadioButton, Checkbox } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { BlurView } from 'expo-blur';
@@ -17,7 +16,7 @@ export default function QuizPage() {
   const [blur, setBlur] = useState(false);
 
   const questions = [
-    { question: 'Create Account', type: 'createAccount' }, // New account creation step
+    { question: 'Create Account', type: 'createAccount' },
     { question: 'What is your age?', type: 'integer' },
     { question: 'What is your weight (in pounds)?', type: 'integer' },
     { question: 'What is your height (in inches)?', type: 'integer' },
@@ -59,16 +58,20 @@ export default function QuizPage() {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
       }, 500);
     } else {
-      // Final submission with JSON logging
       const submission = {
         accountDetails,
         answers,
       };
 
-      console.log('Quiz Submission:', JSON.stringify(submission, null, 2)); // Logs the JSON
-
+      console.log('Quiz Submission:', JSON.stringify(submission, null, 2));
       alert('Thank you for completing the quiz!');
       router.push('/');
+    }
+  };
+
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
@@ -80,33 +83,27 @@ export default function QuizPage() {
     const currentQuestion = questions[currentQuestionIndex];
 
     switch (currentQuestion.type) {
-      case 'createAccount': // Create Account Form
+      case 'createAccount':
         return (
-          <View style={styles.createAccountContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Name"
-              placeholderTextColor="#A8896D"
-              value={accountDetails.name}
-              onChangeText={(text) => setAccountDetails({ ...accountDetails, name: text })}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor="#A8896D"
-              value={accountDetails.email}
-              onChangeText={(text) => setAccountDetails({ ...accountDetails, email: text })}
-              keyboardType="email-address"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor="#A8896D"
-              value={accountDetails.password}
-              onChangeText={(text) => setAccountDetails({ ...accountDetails, password: text })}
-              secureTextEntry={true}
-            />
-          </View>
+            <><TextInput
+                style={styles.input}
+                placeholder="Name"
+                placeholderTextColor="#A8896D"
+                value={accountDetails.name}
+                onChangeText={(text) => setAccountDetails({ ...accountDetails, name: text })} /><TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    placeholderTextColor="#A8896D"
+                    value={accountDetails.email}
+                    onChangeText={(text) => setAccountDetails({ ...accountDetails, email: text })}
+                    keyboardType="email-address" /><TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    placeholderTextColor="#A8896D"
+                    value={accountDetails.password}
+                    onChangeText={(text) => setAccountDetails({ ...accountDetails, password: text })}
+                    secureTextEntry={true} /></>
+        
         );
       case 'integer':
         return (
@@ -119,7 +116,7 @@ export default function QuizPage() {
             placeholderTextColor="#A8896D"
           />
         );
-      case 'string': // Radio buttons for single-choice questions
+      case 'string':
         return currentQuestion.options.map((option, index) => (
           <TouchableOpacity
             key={index}
@@ -135,7 +132,7 @@ export default function QuizPage() {
             <Text style={styles.optionText}>{option}</Text>
           </TouchableOpacity>
         ));
-      case 'array': // Checkboxes for multi-choice questions
+      case 'array':
         return currentQuestion.options.map((option, index) => (
           <TouchableOpacity
             key={index}
@@ -190,36 +187,48 @@ export default function QuizPage() {
   };
 
   return (
-    <>
-      <Stack.Screen options={{ title: 'Quiz' }} name="Quiz" />
-
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          {currentQuestionIndex === 0 ? 'Welcome to SenseHer' : 'Getting to Know You'}
-        </Text>
-        {blur && (
-          <BlurView intensity={50} tint="light" style={StyleSheet.absoluteFill}>
-            <Text style={styles.blurText}>Loading next question...</Text>
-          </BlurView>
-        )}
-        {!blur && (
-          <>
-            <Text style={styles.question}>
-              {questions[currentQuestionIndex].question}
-            </Text>
-            <View style={styles.centeredContent}>{renderQuestion()}</View>
+    <View style={styles.container}>
+      <Text style={styles.title}>
+        {currentQuestionIndex === 0 ? 'Welcome to SenseHer' : 'Getting to Know You'}
+      </Text>
+      {blur && (
+        <BlurView intensity={50} tint="light" style={StyleSheet.absoluteFill}>
+          <Text style={styles.blurText}>Loading next question...</Text>
+        </BlurView>
+      )}
+      {!blur && (
+        <>
+          <Text style={styles.question}>
+            {questions[currentQuestionIndex].question}
+          </Text>
+          <View style={styles.centeredContent}>{renderQuestion()}</View>
+          <Button
+            mode="contained"
+            onPress={handleNextQuestion}
+            style={styles.button}
+            labelStyle={styles.buttonText}
+          >
+            Next
+          </Button>
+          {currentQuestionIndex > 0 && (
             <Button
               mode="contained"
-              onPress={handleNextQuestion}
-              style={styles.button}
+              onPress={handlePreviousQuestion}
+              style={[styles.button]}
               labelStyle={styles.buttonText}
             >
-              Next
+              Previous
             </Button>
-          </>
-        )}
-      </View>
-    </>
+          )}
+        </>
+      )}
+      <TouchableOpacity
+        onPress={() => router.push('/')}
+        style={styles.returnHomeButton}
+      >
+        <Text style={styles.returnHomeText}>Return to Home</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -236,8 +245,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#A8896D',
     textAlign: 'center',
-    marginTop: '10%',
     marginBottom: '20%',
+    marginTop: '10%',
   },
   question: {
     fontSize: 20,
@@ -252,10 +261,6 @@ const styles = StyleSheet.create({
     marginTop: '50%',
   },
   centeredContent: {
-    width: '100%',
-    alignItems: 'center',
-  },
-  createAccountContainer: {
     width: '100%',
     alignItems: 'center',
   },
@@ -291,8 +296,20 @@ const styles = StyleSheet.create({
     marginTop: 16,
     width: '80%',
   },
+  previousButton: {
+    backgroundColor: '#FFF4E6',
+  },
   buttonText: {
     color: '#FFF4E6',
+    fontSize: 16,
+  },
+  returnHomeButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+  },
+  returnHomeText: {
+    color: '#A8896D',
     fontSize: 16,
   },
 });
