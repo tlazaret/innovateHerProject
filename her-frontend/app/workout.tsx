@@ -13,7 +13,6 @@ export default function WorkoutsPage() {
     setWorkoutPlan('Updated workout plan: Light cardio and stretching.');
   };
 
-
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -34,8 +33,10 @@ export default function WorkoutsPage() {
   }, [navigation]);
 
   return (
-
-    <View style={styles.container}>
+    <ImageBackground
+      source={require('@/assets/images/mainbackground.png')} // Replace with your image path
+      style={styles.background}
+    >
       {/* Top Third: Cycle Info */}
       <View style={[styles.section, styles.topSection]}>
         <Text style={styles.title}>Today's Cycle Info</Text>
@@ -84,16 +85,16 @@ export default function WorkoutsPage() {
       <TouchableOpacity style={styles.cameraButton}>
         <Text style={styles.cameraIcon}>📷</Text>
       </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
+    resizeMode: 'cover',
     justifyContent: 'flex-start',
     padding: 16,
-    backgroundColor: '#FFFBFC', // Light beige background
   },
   section: {
     marginBottom: '5%', // Add spacing between sections
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 12,
     padding: 16,
-    backgroundColor: '#E9E5DB', // Lighter beige
+    backgroundColor: 'rgba(233, 229, 219, 0.8)', // Semi-transparent beige
   },
   workoutPlanHeader: {
     flexDirection: 'row',
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 12,
     padding: 16,
-    backgroundColor: '#E9E5DB', // Lighter beige
+    backgroundColor: 'rgba(233, 229, 219, 0.8)', // Semi-transparent beige
   },
   buttonsContainer: {
     flexDirection: 'row',
