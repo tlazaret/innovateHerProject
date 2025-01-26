@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ImageBackground, Alert } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { useNavigation } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function WorkoutsPage() {
   const [cycleInfo, setCycleInfo] = useState(
     'Movements you can do during this time of your cycle will be shown here.'
   );
   const [workoutPlan, setWorkoutPlan] = useState('Suggested workout plan: Rest day with light yoga.');
+  const [photo, setPhoto] = useState(null); // State to store the photo
 
   const handleRefreshWorkoutPlan = () => {
     setWorkoutPlan('Updated workout plan: Light cardio and stretching.');
@@ -31,6 +33,27 @@ export default function WorkoutsPage() {
       },
     });
   }, [navigation]);
+
+  const handleTakePhoto = async () => {
+    // Ask for camera permissions
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert('Permission Required', 'Camera permission is required to take photos.');
+      return;
+    }
+
+    // Open camera
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setPhoto(result.uri); // Save the photo URI
+      Alert.alert('Photo Taken', 'Your photo has been saved.');
+    }
+  };
 
   return (
     <ImageBackground
@@ -82,9 +105,17 @@ export default function WorkoutsPage() {
       </View>
 
       {/* Camera Button */}
-      <TouchableOpacity style={styles.cameraButton}>
+      <TouchableOpacity style={styles.cameraButton} onPress={handleTakePhoto}>
         <Text style={styles.cameraIcon}>📷</Text>
       </TouchableOpacity>
+
+      {/* Show the photo if available */}
+      {photo && (
+        <View style={styles.photoPreview}>
+          <Text style={styles.photoTitle}>Photo Preview:</Text>
+          <ImageBackground source={{ uri: photo }} style={styles.photo} />
+        </View>
+      )}
     </ImageBackground>
   );
 }
@@ -128,6 +159,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
+  },
+  refreshButton: {
+    marginRight: 8,
   },
   workoutPlanBox: {
     flex: 1,
@@ -183,5 +217,23 @@ const styles = StyleSheet.create({
   cameraIcon: {
     fontSize: 28,
     color: '#F4ECE2', // Light beige
+  },
+  photoPreview: {
+    position: 'absolute',
+    bottom: 100,
+    left: 16,
+    right: 16,
+    alignItems: 'center',
+  },
+  photoTitle: {
+    fontSize: 16,
+    color: '#264653',
+    marginBottom: 8,
+  },
+  photo: {
+    width: 200,
+    height: 200,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
 });

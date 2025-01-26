@@ -1,23 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, RadioButton, Checkbox } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { BlurView } from 'expo-blur';
+import { useNavigation } from '@react-navigation/native';
 
 export default function QuizPage() {
   const router = useRouter();
+  const navigation = useNavigation();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState('');
-  const [answers, setAnswers] = useState<{ [key: number]: any }>({});
+  const [answers, setAnswers] = useState({});
   const [accountDetails, setAccountDetails] = useState({ name: '', email: '', password: '' });
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [blur, setBlur] = useState(false);
 
+  useEffect(() => {
+    navigation.setOptions({
+      title: 'Sign Up',
+      headerStyle: {
+        backgroundColor: '#FFFBFC', // Match your app's color scheme
+      },
+      headerTitleStyle: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        color: '#2E86AB',
+      },
+      headerTintColor: '#2E86AB', // Color of the back arrow
+      headerBackTitle: 'Back', // Text for the back button
+      headerBackTitleVisible: true, // Ensures the text is displayed
+    });
+  }, [navigation]);
+  
+
   const questions = [
     { question: 'Create Account', type: 'createAccount' },
-    { question: 'What is your age?', type: 'integer' },
+    { question: 'How old are you?', type: 'integer' },
     { question: 'What is your weight (in pounds)?', type: 'integer' },
     { question: 'What is your height (in inches)?', type: 'integer' },
     {
@@ -65,7 +85,7 @@ export default function QuizPage() {
 
       console.log('Quiz Submission:', JSON.stringify(submission, null, 2));
       alert('Thank you for completing the quiz!');
-      router.push('/');
+      router.push('/mainpage');
     }
   };
 
@@ -88,18 +108,18 @@ export default function QuizPage() {
             <><TextInput
                 style={styles.input}
                 placeholder="Name"
-                placeholderTextColor="#A8896D"
+                placeholderTextColor="#B0BEC5"
                 value={accountDetails.name}
                 onChangeText={(text) => setAccountDetails({ ...accountDetails, name: text })} /><TextInput
                     style={styles.input}
                     placeholder="Email"
-                    placeholderTextColor="#A8896D"
+                    placeholderTextColor="#B0BEC5"
                     value={accountDetails.email}
                     onChangeText={(text) => setAccountDetails({ ...accountDetails, email: text })}
                     keyboardType="email-address" /><TextInput
                     style={styles.input}
                     placeholder="Password"
-                    placeholderTextColor="#A8896D"
+                    placeholderTextColor="#B0BEC5"
                     value={accountDetails.password}
                     onChangeText={(text) => setAccountDetails({ ...accountDetails, password: text })}
                     secureTextEntry={true} /></>
@@ -113,7 +133,7 @@ export default function QuizPage() {
             onChangeText={handleInputChange}
             value={answers[currentQuestionIndex] || ''}
             placeholder="Enter a number"
-            placeholderTextColor="#A8896D"
+            placeholderTextColor="#B0BEC5"
           />
         );
       case 'string':
@@ -198,9 +218,12 @@ export default function QuizPage() {
       )}
       {!blur && (
         <>
-          <Text style={styles.question}>
-            {questions[currentQuestionIndex].question}
+          <Text style={styles.questionContainer}>
+            <Text style={styles.question}>
+              {questions[currentQuestionIndex].question}
+            </Text>
           </Text>
+
           <View style={styles.centeredContent}>{renderQuestion()}</View>
           <Button
             mode="contained"
@@ -235,46 +258,55 @@ export default function QuizPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'top',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#F8EDE3',
+    backgroundColor: '#FFFBFC',
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: '#A8896D',
+    color: '#2E86AB',
     textAlign: 'center',
-    marginBottom: '20%',
-    marginTop: '10%',
+    marginBottom: '10%',
+    marginTop: '5%',
+  },
+  questionContainer: {
+    width: '80%',
+    padding: 14,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#FFFBFC', // Border color
+    backgroundColor: '#FFD6E0', // Light bubble color
+    marginBottom: 40,
   },
   question: {
-    fontSize: 20,
-    marginBottom: 20,
-    color: '#D4A373',
+    fontSize: 16,
+    color: '#2E86AB', // Text color
     textAlign: 'center',
+    fontWeight: '600',
   },
   blurText: {
     fontSize: 20,
-    color: '#D4A373',
+    color: '#FE8268',
     textAlign: 'center',
     marginTop: '50%',
   },
   centeredContent: {
     width: '100%',
-    alignItems: 'center',
+    alignItems: 'center',                   
   },
   textBubble: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFF4E6',
+    backgroundColor: '#FFFBFC',
     borderRadius: 20,
     marginVertical: 8,
     alignItems: 'center',
     width: '80%',
   },
   selectedBubble: {
-    backgroundColor: '#D4A373',
+    backgroundColor: '#FFD6E0',
   },
   optionText: {
     fontSize: 16,
@@ -282,26 +314,27 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: '#A8896D',
+    borderColor: '#FFC2C9',
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 8,
-    width: '80%',
+    width: '40%',
     color: '#6D4C41',
-    backgroundColor: '#FFF4E6',
+    backgroundColor: '#FFFBFC',
     borderRadius: 10,
+    fontSize: 17,
+    alignItems: 'center',
   },
   button: {
-    backgroundColor: '#D4A373',
+    backgroundColor: '#2E86AB',
     marginTop: 16,
     width: '80%',
-  },
-  previousButton: {
-    backgroundColor: '#FFF4E6',
+    borderRadius: 15,
   },
   buttonText: {
-    color: '#FFF4E6',
+    color: '#FFFBFC',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   returnHomeButton: {
     position: 'absolute',
@@ -309,10 +342,10 @@ const styles = StyleSheet.create({
     left: 20,
   },
   returnHomeText: {
-    color: '#A8896D',
+    color: '#2E86AB',
     fontSize: 16,
+    marginBottom: 20,
   },
-
-  
 });
+
 

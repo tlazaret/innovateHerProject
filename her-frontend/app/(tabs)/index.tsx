@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import {
-  Image,
-  StyleSheet,
-  Platform,
   ImageBackground,
   View,
   Text,
-  ScrollView,
+  StyleSheet,
   TouchableOpacity,
   Modal,
-  Button,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import WeekCalendar from '@/components/MainPageCalendar';
@@ -22,7 +18,7 @@ export default function HomeScreen() {
 
   const handleNavigation = (destination) => {
     setShowSignUp(false); // Close the modal
-    router.push(destination); // Navigate to the selected page
+    setTimeout(() => router.push(destination), 300); // Navigate after modal animation
   };
 
   return (
@@ -31,9 +27,22 @@ export default function HomeScreen() {
       style={styles.background}
     >
       {/* Sign Up Modal */}
-      <Modal visible={showSignUp} transparent animationType="slide">
+      <Modal
+        visible={showSignUp}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowSignUp(false)} // Handle back press on Android
+      >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            {/* Close Button */}
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setShowSignUp(false)}
+            >
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+
             <Text style={styles.modalTitle}>Welcome to</Text>
             <Text style={styles.modalTitle2}>🌸 SenseHer 🌸</Text>
 
@@ -127,10 +136,26 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5, // Shadow for Android
   },
+  closeButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    backgroundColor: '#2E86AB',
+    borderRadius: 16,
+    width: 32,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: '#FFF4E6',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#264653',
+    color: '#2E86AB',
     marginBottom: 8,
   },
   modalTitle2: {
