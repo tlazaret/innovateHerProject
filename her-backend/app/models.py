@@ -9,8 +9,16 @@ class User(BaseModel):
 class Workout(BaseModel):
     content: str
 
+class Macros(BaseModel):
+    protein: str
+    hydration: str
+    grains: str
+    fruits: str
+    vegetables: str
+
 class Meals(BaseModel):
-    content: str
+    message: str
+    suggested_recipe: Macros
 
 class Day(BaseModel):
     workout: Workout | None = None

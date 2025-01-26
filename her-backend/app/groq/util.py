@@ -40,8 +40,9 @@ async def generate_json(message: str):
             {
                 "role": "system",
                 "content": f'''
+                If you determine the request needs no actions, return {{"action": "none"}}
                 You are a fitness and wellness assistant for women's health and wellness. You are in charge of updating your user weekly schedule in JSON format based on their mood and requests. The JSON schema should be:
-                {{"days" : List(length of 7 for each day)[{Day.model_json_schema()}]}}
+                {{"action": "update", "days" : List(length 7 for each day)[{Day.model_json_schema()}]}}
                 ''',
             },
             {"role": "user", "content": message},
