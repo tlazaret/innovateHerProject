@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Animated, Modal, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Animated, Modal, ScrollView, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useNavigation } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -69,105 +69,115 @@ const MealPlanPage: React.FC = () => {
   }, [navigation, floatAnim]);
 
   return (
-    <ImageBackground
-      source={require('@/assets/images/mainbackground.png')}
-      style={styles.background}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
     >
-      <View style={styles.container}>
-        <View style={styles.textBox}>
-          <Text style={styles.textBoxText}>
-            This is where you are in your cycle. You are in the INSERT PHASE. This is my suggested meal plan for you:
-          </Text>
-          <Text style={styles.textBoxTextMealPlan}>
-            yapyapyap
-          </Text>
-        </View>
-
-        <Animated.View
-          style={[
-            styles.floatingButtonContainer,
-            {
-              transform: [
-                {
-                  translateY: floatAnim.interpolate({
-                    inputRange: [0, 2.5],
-                    outputRange: [0, -15],
-                  }),
-                },
-              ],
-            },
-          ]}
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <ImageBackground
+          source={require('@/assets/images/mainbackground.png')}
+          style={styles.background}
         >
-          <View style={styles.row}>
-            <TouchableOpacity
-              style={styles.floatingButton}
-              onPress={() => handlePlateButtonPress('Fruit')}
-            >
-              <MaterialCommunityIcons name="fruit-watermelon" size={30} color={buttonColors.Fruit} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.floatingButton}
-              onPress={() => handlePlateButtonPress('Vegetables')}
-            >
-              <Icon name="leaf" size={30} color={buttonColors.Vegetables} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.floatingButton}
-              onPress={() => handlePlateButtonPress('Protein')}
-            >
-              <FontAwesome6 name="cow" size={30} color={buttonColors.Protein} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.floatingButton}
-              onPress={() => handlePlateButtonPress('Grains')}
-            >
-              <FontAwesome6 name="wheat-awn" size={30} color={buttonColors.Grains} />
-            </TouchableOpacity>
-          </View>
+          <View style={styles.container}>
+            <View style={styles.textBox}>
+              <Text style={styles.textBoxText}>
+                This is where you are in your cycle. You are in the INSERT PHASE. This is my suggested meal plan for you:
+              </Text>
+              <Text style={styles.textBoxTextMealPlan}>
+                yapyapyap
+              </Text>
+            </View>
 
-          <View style={styles.row}>
-            <TouchableOpacity
-              style={styles.floatingButton}
-              onPress={() => handlePlateButtonPress('Supplements')}
+            <Animated.View
+              style={[
+                styles.floatingButtonContainer,
+                {
+                  transform: [
+                    {
+                      translateY: floatAnim.interpolate({
+                        inputRange: [0, 2.5],
+                        outputRange: [0, -15],
+                      }),
+                    },
+                  ],
+                },
+              ]}
             >
-              <FontAwesome6 name="pills" size={30} color={buttonColors.Supplements} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.floatingButton}
-              onPress={() => handlePlateButtonPress('Water')}
-            >
-              <Icon name="tint" size={30} color={buttonColors.Water} />
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
-
-        {modalVisible && (
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={true}
-            onRequestClose={closeModal}
-          >
-            <View style={styles.modalBackground}>
-              <View style={styles.modalContainer}>
-                <ScrollView contentContainerStyle={styles.modalContent}>
-                  <Text style={styles.modalTitle}>{modalVisible} for today:</Text>
-                  <Text style={styles.modalText}>
-                    Based on your cycle, this is what {modalVisible.toLowerCase()} I recommend. 
-                  </Text>
-
-                </ScrollView>
-                <TouchableOpacity onPress={closeModal} style={[styles.closeButton, { backgroundColor: closeButtonColor }]}>
-                  <Text style={styles.closeButtonText}>Close</Text>
+              <View style={styles.row}>
+                <TouchableOpacity
+                  style={styles.floatingButton}
+                  onPress={() => handlePlateButtonPress('Fruit')}
+                >
+                  <MaterialCommunityIcons name="fruit-watermelon" size={30} color={buttonColors.Fruit} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.floatingButton}
+                  onPress={() => handlePlateButtonPress('Vegetables')}
+                >
+                  <Icon name="leaf" size={30} color={buttonColors.Vegetables} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.floatingButton}
+                  onPress={() => handlePlateButtonPress('Protein')}
+                >
+                  <FontAwesome6 name="cow" size={30} color={buttonColors.Protein} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.floatingButton}
+                  onPress={() => handlePlateButtonPress('Grains')}
+                >
+                  <FontAwesome6 name="wheat-awn" size={30} color={buttonColors.Grains} />
                 </TouchableOpacity>
               </View>
-            </View>
-          </Modal>
-        )}
 
-        <MainPageChat />
-      </View>
-    </ImageBackground>
+              <View style={styles.row}>
+                <TouchableOpacity
+                  style={styles.floatingButton}
+                  onPress={() => handlePlateButtonPress('Supplements')}
+                >
+                  <FontAwesome6 name="pills" size={30} color={buttonColors.Supplements} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.floatingButton}
+                  onPress={() => handlePlateButtonPress('Water')}
+                >
+                  <Icon name="tint" size={30} color={buttonColors.Water} />
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+
+            {modalVisible && (
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={true}
+                onRequestClose={closeModal}
+              >
+                <View style={styles.modalBackground}>
+                  <View style={styles.modalContainer}>
+                    <ScrollView contentContainerStyle={styles.modalContent}>
+                      <Text style={styles.modalTitle}>{modalVisible} for today:</Text>
+                      <Text style={styles.modalText}>
+                        Based on your cycle, this is what {modalVisible.toLowerCase()} I recommend. 
+                      </Text>
+                    </ScrollView>
+                    <TouchableOpacity onPress={closeModal} style={[styles.closeButton, { backgroundColor: closeButtonColor }]}>
+                      <Text style={styles.closeButtonText}>Close</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
+            )}
+
+            {/* chatbot */}
+            <View style={styles.chatcontainer}>
+              <MainPageChat />
+            </View>
+
+          </View>
+        </ImageBackground>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -187,7 +197,7 @@ const styles = StyleSheet.create({
   textBox: {
     width: '100%',
     padding: 15,
-    backgroundColor: 'rgba(255, 255, 255, 0.6)', // Use rgba with an alpha value (opacity)
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
     alignItems: 'center',
     marginBottom: 40,
     borderRadius: 10,
@@ -209,13 +219,13 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 20, // Adjusts the space between rows
+    marginBottom: 20,
   },
   floatingButton: {
     padding: 15,
     borderRadius: 50,
     borderColor: 'white',
-    margin: 10, // Space between buttons
+    margin: 10,
     shadowColor: '#53444D',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     shadowOffset: { width: 0, height: 1 },
@@ -258,6 +268,15 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'white',
     fontSize: 16,
+  },
+  chatcontainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
+    padding: 20,
+    marginTop: -20,
+    marginBottom: 15
   },
 });
 

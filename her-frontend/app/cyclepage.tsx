@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useNavigation } from 'expo-router';
 import { Circle } from 'react-native-progress';
 import MainPageChat from '@/components/MainPageChat';
@@ -34,34 +34,42 @@ const CyclePage: React.FC = () => {
   }, [navigation]);
 
   return (
-    <ImageBackground
-      source={require('@/assets/images/mainbackground.png')}
-      style={styles.background}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
     >
-      <View style={styles.container}>
-        <View style={styles.textBox}>
-          <Text style={styles.textBoxText}>{getCurrentDate()}.</Text>
-        </View>
-        
-        <Text style={styles.phaseText}>
-          This is the ______ phase of your period. SPECIFIC PHRASE FOR THIS PHASE
-        </Text>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <ImageBackground
+          source={require('@/assets/images/mainbackground.png')}
+          style={styles.background}
+        >
+          <View style={styles.container}>
+            <View style={styles.textBox}>
+              <Text style={styles.textBoxText}>{getCurrentDate()}.</Text>
+            </View>
 
-        <View style={styles.progressContainer}>
-          <Circle
-            size={150}
-            progress={.75} 
-            //showsText={true}
-            thickness={20}
-            color='#CE381A'
-            unfilledColor="#E8E8E8"
-          />
-          <Text style={styles.percentageLabel}>Fertility estimate</Text>
-        </View>
+            <Text style={styles.phaseText}>
+              This is the ______ phase of your period. SPECIFIC PHRASE FOR THIS PHASE
+            </Text>
 
-        <MainPageChat />
-      </View>
-    </ImageBackground>
+            <View style={styles.progressContainer}>
+              <Circle
+                size={150}
+                progress={0.75}
+                thickness={20}
+                color="#CE381A"
+                unfilledColor="#E8E8E8"
+              />
+              <Text style={styles.percentageLabel}>Fertility estimate</Text>
+            </View>
+
+            <View style={styles.chatContainer}>
+              <MainPageChat />
+            </View>
+          </View>
+        </ImageBackground>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -111,6 +119,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontStyle: 'italic',
     textAlign: 'center',
+  },
+  chatContainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
+    padding: 20,
+    marginTop: 30, 
   },
 });
 
