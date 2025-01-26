@@ -1,23 +1,26 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, ImageBackground, View, Image } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ImageBackground, View } from 'react-native';
+import { RelativePathString, useRouter } from 'expo-router'; // Import the router
 
 interface MainPageButtonProps {
   buttontext: string;
-  hexstring: string;  // Background color to blend with the silhouette
-  imageSource: any;  // Silhouette image source
+  hexstring: string;
+  imageSource: any;
+  dest: string;  
 }
 
-const MainPageButton: React.FC<MainPageButtonProps> = ({ buttontext, hexstring, imageSource }) => {
-  return (
-    <TouchableOpacity style={[styles.button]}>
-      <ImageBackground
-        source={imageSource}
-        style={styles.imageBackground}
-      >
+const MainPageButton: React.FC<MainPageButtonProps> = ({ buttontext, hexstring, imageSource, dest }) => {
+  const router = useRouter();  
 
-        <View style={[styles.overlay, { backgroundColor: hexstring }]}/>
-        
-        <Text style={[styles.buttonText, { fontFamily: 'Montserrat' }]}>{buttontext}</Text>
+  const handlePress = () => {
+    router.push(dest as RelativePathString); 
+  };
+
+  return (
+    <TouchableOpacity style={styles.button} onPress={handlePress}>
+      <ImageBackground source={imageSource} style={styles.imageBackground}>
+        <View style={[styles.overlay, { backgroundColor: hexstring }]} />
+        <Text style={styles.buttonText}>{buttontext}</Text>
       </ImageBackground>
     </TouchableOpacity>
   );
@@ -25,36 +28,44 @@ const MainPageButton: React.FC<MainPageButtonProps> = ({ buttontext, hexstring, 
 
 const styles = StyleSheet.create({
   button: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 100,
     height: 100,
     borderRadius: 10,
     marginLeft: 10,
     elevation: 3,
-    shadowColor: '#000',
+
+    shadowColor:'#53444D',
+
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    overflow: 'hidden', // Ensure the content fits within rounded corners
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    overflow: 'hidden',
   },
   imageBackground: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    resizeMode: 'contain', // To preserve the silhouette aspect ratio
+    width: 100,
+    height: 100
+    //alignItems: 'center',
+    //resizeMode: 'contain',
   },
   overlay: {
-    position: 'absolute', // Position the overlay on top of the image
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    opacity: 0.7, // You can adjust this value to control the blending effect
+    opacity: 0.85,
   },
   buttonText: {
     fontSize: 18,
-    color: '#FFFBFC',
+    color: "#FFFBFC",
     fontWeight: 'bold',
     padding: 9,
+    //alignItems: 'center'
   },
 });
 
