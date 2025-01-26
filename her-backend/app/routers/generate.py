@@ -21,15 +21,15 @@ async def handle_gen_json(message: str):
         raise HTTPException(status_code=400, detail="Error generating json")
 
     # WARN
-    days : List[Day] = []
-    for day in response["days"]:
-        days.append(
-            Day(
-                workout=Workout(content=day["workout"]["content"]),
-                meals=Meals(content=day["meals"]["content"]),
-                cycles="good"
-            )
-        )
-    await db_update_schedule(id, days)
+    # days : List[Day] = []
+    # for day in response["days"]:
+    #     days.append(
+    #         Day(
+    #             workout=Workout(content=day["workout"]["content"]),
+    #             meals=Meals(content=day["meals"]["content"]),
+    #             cycles="good"
+    #         )
+    #     )
+    # await db_update_schedule(id, days)
     
     return response

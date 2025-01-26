@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class User(BaseModel):
-    first : str = "John"
+    first : str = "Jane"
     last : str = "Doe"
     age: int
     weight: int
@@ -15,7 +15,7 @@ class Meals(BaseModel):
 class Day(BaseModel):
     workout: Workout | None = None
     meals: Meals | None = None
-    cycles: str = "This feature was implemented by a male who has no clue about this subject."
+    cycles: str = "good"
 
 class Schedule(BaseModel):
     uid: str

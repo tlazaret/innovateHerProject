@@ -2,7 +2,7 @@ import json
 import os
 
 from groq import Groq
-from app.models import Prompt
+from app.models import Prompt, Day
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
@@ -39,22 +39,10 @@ async def generate_json(message: str):
         messages=[
             {
                 "role": "system",
-                "content": """
+                "content": f'''
                 You are a fitness and wellness assistant for women's health and wellness. You are in charge of updating your user weekly schedule in JSON format based on their mood and requests. The JSON schema should be:
-                {
-                    "days": (List of length 7 for each day of the week) [
-                        {
-                            workout: {
-                                content: "string (suggesting a excercise for the day)"
-                                },
-                            meals : {
-                                content: "string (suggested meal plan for the day)"
-                                },
-                            cycles: "good"
-                            } 
-                        ]
-                }
-                """,
+                {{"days" : List(length of 7 for each day)[{Day.model_json_schema()}]}}
+                ''',
             },
             {"role": "user", "content": message},
         ],
@@ -63,7 +51,6 @@ async def generate_json(message: str):
     )
 
     data = res.choices[0].message.content
-
     if not data:
         return None
 
