@@ -312,4 +312,7 @@ const styles = StyleSheet.create({
     color: '#A8896D',
     fontSize: 16,
   },
+
+  
 });
+
