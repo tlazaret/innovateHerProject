@@ -1,7 +1,7 @@
 from typing import List
 import pymongo
 from pymongo.collection import ObjectId
-from ..models import Day, Meals, Schedule, User, Workout
+from ..models import Day, Schedule, User
 
 week = 7
 uri = "mongodb+srv://herdb:a6cqBpkkoACHvq6x@her-cluster.04a4m.mongodb.net/?retryWrites=true&w=majority&appName=her-cluster"
@@ -15,6 +15,14 @@ async def db_insert_user(user: User):
     col = db["users"]
     res = col.insert_one(user.model_dump())
     return res.inserted_id
+
+#Get document
+async def db_get_doc(collection: str, id: str):
+    col = db[collection]
+    oid = {'_id': ObjectId(id)}
+
+    res = col.find_one(filter=oid)
+    return res
 
 #Init schedule for user
 async def db_init_schedule_per_user(uid):
