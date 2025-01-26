@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import { IconButton } from 'react-native-paper';
+import { useNavigation } from 'expo-router';
 
 export default function WorkoutsPage() {
   const [cycleInfo, setCycleInfo] = useState(
@@ -9,11 +10,31 @@ export default function WorkoutsPage() {
   const [workoutPlan, setWorkoutPlan] = useState('Suggested workout plan: Rest day with light yoga.');
 
   const handleRefreshWorkoutPlan = () => {
-    // Placeholder functionality for refreshing the workout plan
     setWorkoutPlan('Updated workout plan: Light cardio and stretching.');
   };
 
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Workout',
+      headerStyle: {
+        backgroundColor: '#FFFBFC',
+        elevation: 0,
+        shadowOpacity: 0,
+      },
+      headerTintColor: '#264653',
+      headerBackTitle: 'Back',
+      headerTitleStyle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+      },
+    });
+  }, [navigation]);
+
   return (
+
     <View style={styles.container}>
       {/* Top Third: Cycle Info */}
       <View style={[styles.section, styles.topSection]}>
@@ -72,7 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     padding: 16,
-    backgroundColor: '#F4ECE2', // Light beige background
+    backgroundColor: '#FFFBFC', // Light beige background
   },
   section: {
     marginBottom: '5%', // Add spacing between sections

@@ -18,7 +18,7 @@ export default function HomeScreen() {
         <View style={styles.mainContainer}>
           <View style={styles.buttonContainer}>
             <MainPageButton buttontext='Meal Prep' hexstring='#988F2A' imageSource={require('@/assets/images/food.png')} dest="/mealplanpage"/>
-            <MainPageButton buttontext='Workout' hexstring='#2E86AB' imageSource={require('@/assets/images/yoga.png')} dest="/mealplanpage"/>
+            <MainPageButton buttontext='Workout' hexstring='#2E86AB' imageSource={require('@/assets/images/yoga.png')} dest="/workout"/>
             <MainPageButton buttontext='Cycle' hexstring='#FF8491' imageSource={require('@/assets/images/drop.png')} dest="/cyclepage"/>
           </View>
           <View style={styles.textContainer}>
