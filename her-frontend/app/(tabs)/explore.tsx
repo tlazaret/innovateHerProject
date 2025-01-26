@@ -6,6 +6,9 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { View } from 'react-native';
+import { Button } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 export default function TabTwoScreen() {
   return (
@@ -95,6 +98,18 @@ export default function TabTwoScreen() {
   );
 }
 
+export default function Explore() {
+  const navigation = useNavigation();
+
+  return (
+    <View style={styles.container}>
+      <Button mode="contained" onPress={() => navigation.navigate('NewPage')}>
+        Go to New Page
+      </Button>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   headerImage: {
     color: '#808080',
@@ -106,4 +121,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
   },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  }
 });
